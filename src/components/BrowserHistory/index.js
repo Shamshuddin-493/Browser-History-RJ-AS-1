@@ -1,27 +1,31 @@
 import './index.css'
 
-// Replace your code here
-const BrowserHistory = props => {
-  const {searchResultDetails, onDelHistory} = props
-  const {id, timeAccessed, logoUrl, title, domainUrl} = searchResultDetails
+const HistoryItem = props => {
+  const {details, deleteItem} = props
+  const {id, timeAccessed, logoUrl, title, domainUrl} = details
 
-  const delHistory = () => {
-    onDelHistory(id)
+  const handleClick = () => {
+    deleteItem(id)
   }
 
   return (
-    <li>
-      <div>
-        <p>{timeAccessed}</p>
-        <img src={logoUrl} alt="domain logo" />
-        <p>{title}</p>
+    <li className="w-70 mb-3 d-flex justify-content-between">
+      <div className="d-flex">
+        <p className="mr-5">{timeAccessed}</p>
+        <img className="logo" src={logoUrl} alt="domain logo" />
+        <p className="ml-4 mr-4">{title}</p>
         <p>{domainUrl}</p>
-        <button type="button">
+      </div>
+      <div>
+        <button
+          onClick={handleClick}
+          //   testid="delete"
+          className="delete"
+          type="button"
+        >
           <img
             src="https://assets.ccbp.in/frontend/react-js/delete-img.png"
             alt="delete"
-            onClick={delHistory}
-            data-testid="delete"
           />
         </button>
       </div>
@@ -29,4 +33,4 @@ const BrowserHistory = props => {
   )
 }
 
-export default BrowserHistory
+export default HistoryItem
