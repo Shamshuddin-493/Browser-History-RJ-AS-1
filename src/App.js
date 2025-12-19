@@ -1,8 +1,8 @@
-import {Component} from 'react'
-import BrowserHistory from './components/BrowserHistory'
-
 import './App.css'
+import {Component} from 'react'
+import BrowserHistoryItem from './BrowserHistoryItem'
 
+// These are the list used in the application. You can move them to any component needed.
 const initialHistoryList = [
   {
     id: 0,
@@ -78,62 +78,72 @@ const initialHistoryList = [
   },
 ]
 
+// Replace your code here
 class App extends Component {
-  state = {searchInp: '', historyList: initialHistoryList}
+  state = {userInput: '', historyList: initialHistoryList}
 
-  onChangeSearchInp = event => {
-    this.setState({searchInp: event.target.value})
+  onChangeInput = event => {
+    this.setState({userInput: event.target.value})
   }
 
-  onDelHistory = id => {
+  deleteHistory = id => {
     const {historyList} = this.state
-    const filteredHistoryList = historyList.filter(
-      eachHistory => eachHistory.id !== id,
+    const deletedResults = historyList.filter(
+      eachHistory => id !== eachHistory.id,
     )
-    this.setState({historyList: filteredHistoryList})
+    this.setState({historyList: deletedResults})
   }
 
   render() {
-    let display = true
-    const {searchInp, historyList} = this.state
-    const searchResults = historyList.filter(eachListItem =>
-      eachListItem.title.toLowerCase().includes(searchInp.toLowerCase()),
+    const {userInput, historyList} = this.state
+    const searchResults = historyList.filter(eachHistory =>
+      eachHistory.title.toLowerCase().includes(userInput.toLowerCase()),
     )
-    if (searchResults.length === 0) {
-      display = false
-    }
+
     return (
-      <div>
-        <div>
-          <div>
-            <img
-              src="https://assets.ccbp.in/frontend/react-js/history-website-logo-img.png"
-              alt="logo"
-            />
-            <img
-              src="https://assets.ccbp.in/frontend/react-js/search-img.png"
-              alt="search"
-            />
-            <input
-              type="search"
-              value={searchInp}
-              placeholder="Search History"
-              onChange={this.onChangeSearchInp}
-            />
-            <ul>
-              {display ? (
-                searchResults.map(eachSearchResult => (
-                  <BrowserHistory
-                    searchResultDetails={eachSearchResult}
-                    key={eachSearchResult.id}
-                    onDelHistory={this.onDelHistory}
-                  />
-                ))
-              ) : (
-                <p>There is no history to show</p>
-              )}
-            </ul>
+      <div className="app-container">
+        <div className="app-header">
+          <img
+            src="https://assets.ccbp.in/frontend/react-js/history-website-logo-img.png"
+            alt="app logo"
+            className="app-logo"
+          />
+          <div className="search-container">
+            <div className="search-bar-container">
+              <div className="logo-container">
+                <img
+                  src="https://assets.ccbp.in/frontend/react-js/search-img.png"
+                  alt="search"
+                  className="search-logo"
+                />
+              </div>
+
+              <input
+                type="search"
+                placeholder="Search history"
+                className="search-input"
+                value={userInput}
+                onChange={this.onChangeInput}
+              />
+            </div>
           </div>
+        </div>
+        <div className="app-footer">
+          <ul className="history-list-container">
+            {searchResults.length === 0 ? (
+              <div className="no-history-con">
+                <p className="no-history">There is no history to show</p>
+              </div>
+            ) : (
+              searchResults.map(eachHistory => (
+                <BrowserHistoryItem
+                  key={eachHistory.id}
+                  history={eachHistory}
+                  deleteHistory={this.deleteHistory}
+                />
+              ))
+            )}
+          </ul>
         </div>
       </div>
     )
